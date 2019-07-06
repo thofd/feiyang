@@ -9,6 +9,7 @@ install_ss_panel_mod_v3(){
 	if [ "${num}" != "1" ]; then
   	  wget -c --no-check-certificate https://raw.githubusercontent.com/puzzleindex/ss-panel-and-ss-py-mu/master/lnmp1.4.zip && unzip lnmp1.4.zip && rm -rf lnmp1.4.zip && cd lnmp1.4 && chmod +x install.sh && ./install.sh lnmp
 	fi
+	mysqladmin -u root -p root password cPeZ3tM3GAdh9SHy
 	cd /home/wwwroot/
 	cp -r default/phpmyadmin/ .
 	cd default
@@ -25,9 +26,9 @@ install_ss_panel_mod_v3(){
 	service nginx restart
 	IPAddress=`wget http://whatismyip.akamai.com/ -O - -q ; echo`;
 	sed -i "s#103.74.192.11#${IPAddress}#" /home/wwwroot/default/sql/sspanel.sql
-	mysql -uroot -proot -e"create database sspanel;" 
-	mysql -uroot -proot -e"use sspanel;" 
-	mysql -uroot -proot sspanel < /home/wwwroot/default/sql/sspanel.sql
+	mysql -uroot -pcPeZ3tM3GAdh9SHy -e"create database sspanel;" 
+	mysql -uroot -pcPeZ3tM3GAdh9SHy -e"use sspanel;" 
+	mysql -uroot -pcPeZ3tM3GAdh9SHy sspanel < /home/wwwroot/default/sql/sspanel.sql
 	cd /home/wwwroot/default
 	php -n xcat initdownload
 	php xcat initQQWry
