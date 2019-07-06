@@ -25,9 +25,9 @@ install_ss_panel_mod_v3(){
 	service nginx restart
 	IPAddress=`wget http://whatismyip.akamai.com/ -O - -q ; echo`;
 	sed -i "s#103.74.192.11#${IPAddress}#" /home/wwwroot/default/sql/sspanel.sql
-	mysql -uroot -proot -e"create database sspanel;" 
-	mysql -uroot -proot -e"use sspanel;" 
-	mysql -uroot -proot sspanel < /home/wwwroot/default/sql/sspanel.sql
+	mysql -uroot -pcPeZ3tM3GAdh9SHy -e"create database ssdata;" 
+	mysql -uroot -pcPeZ3tM3GAdh9SHy -e"use ssdata;" 
+	mysql -uroot -pcPeZ3tM3GAdh9SHy ssdata < /home/wwwroot/default/sql/sspanel.sql
 	cd /home/wwwroot/default
 	php -n xcat initdownload
 	php xcat initQQWry
