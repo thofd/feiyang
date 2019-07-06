@@ -21,7 +21,7 @@ install_ss_panel_mod_v3(){
 	chmod -R 777 *
 	chown -R www:www storage
 	chattr +i public/.user.ini
-	wget -N -P  /usr/local/nginx/conf/ --no-check-certificate https://raw.githubusercontent.com/puzzleindex/ss-panel-and-ss-py-mu/master/nginx.conf
+	wget -N -P  /usr/local/nginx/conf/ --no-check-certificate https://raw.githubusercontent.com/thofd/ss-panel-and-ss-py-mu/master/nginx.conf
 	service nginx restart
 	IPAddress=`wget http://whatismyip.akamai.com/ -O - -q ; echo`;
 	sed -i "s#103.74.192.11#${IPAddress}#" /home/wwwroot/default/sql/sspanel.sql
