@@ -7,13 +7,13 @@ install_ss_panel_mod_v3(){
 	yum update -y nss curl libcurl 
 	num=$1
 	if [ "${num}" != "1" ]; then
-  	  wget -c --no-check-certificate https://raw.githubusercontent.com/thofd/ss-panel-and-ss-py-mu/master/lnmp1.4.zip && unzip lnmp1.4.zip && rm -rf lnmp1.4.zip && cd lnmp1.4 && chmod +x install.sh && ./install.sh lnmp
+  	  wget -c --no-check-certificate https://raw.githubusercontent.com/puzzleindex/ss-panel-and-ss-py-mu/master/lnmp1.4.zip && unzip lnmp1.4.zip && rm -rf lnmp1.4.zip && cd lnmp1.4 && chmod +x install.sh && ./install.sh lnmp
 	fi
 	cd /home/wwwroot/
 	cp -r default/phpmyadmin/ .
 	cd default
 	rm -rf index.html
-	git clone https://github.com/thofd/mod.git tmp && mv tmp/.git . && rm -rf tmp && git reset --hard
+	git clone https://github.com/mmmwhy/mod.git tmp && mv tmp/.git . && rm -rf tmp && git reset --hard
 	cp config/.config.php.example config/.config.php
 	chattr -i .user.ini
 	mv .user.ini public
@@ -21,13 +21,13 @@ install_ss_panel_mod_v3(){
 	chmod -R 777 *
 	chown -R www:www storage
 	chattr +i public/.user.ini
-	wget -N -P  /usr/local/nginx/conf/ --no-check-certificate https://raw.githubusercontent.com/thofd/ss-panel-and-ss-py-mu/master/nginx.conf
+	wget -N -P  /usr/local/nginx/conf/ --no-check-certificate https://raw.githubusercontent.com/puzzleindex/ss-panel-and-ss-py-mu/master/nginx.conf
 	service nginx restart
 	IPAddress=`wget http://whatismyip.akamai.com/ -O - -q ; echo`;
 	sed -i "s#103.74.192.11#${IPAddress}#" /home/wwwroot/default/sql/sspanel.sql
-	mysql -uroot -proot -e"create database ssdata;" 
-	mysql -uroot -proot -e"use ssdata;" 
-	mysql -uroot -proot ssdata < /home/wwwroot/default/sql/sspanel.sql
+	mysql -uroot -proot -e"create database sspanel;" 
+	mysql -uroot -proot -e"use sspanel;" 
+	mysql -uroot -proot sspanel < /home/wwwroot/default/sql/sspanel.sql
 	cd /home/wwwroot/default
 	php -n xcat initdownload
 	php xcat initQQWry
@@ -139,7 +139,7 @@ install_centos_ssr(){
 	./configure && make -j2 && make install
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
 	ldconfig
-	git clone -b manyuser https://github.com/thofd/shadowsocks.git "/root/shadowsocks"
+	git clone -b manyuser https://github.com/NimaQu/shadowsocks.git "/root/shadowsocks"
 	cd /root/shadowsocks
 	chkconfig supervisord on
 	#第一次安装
@@ -186,7 +186,7 @@ install_ubuntu_ssr(){
 	apt-get install python-pip git -y
 	pip install cymysql==0.9.13
 	cd /root
-	git clone -b manyuser https://github.com/thofd/shadowsocks.git "/root/shadowsocks"
+	git clone -b manyuser https://github.com/NiMaQu/shadowsocks.git "/root/shadowsocks"
 	cd shadowsocks
 	pip install -r requirements.txt
 	chmod +x *.sh
@@ -318,16 +318,16 @@ install_node_db(){
 	cd /root/shadowsocks
 	echo -e "modify Config.py...\n"
 	sed -i "s#'modwebapi'#'glzjinmod'#" /root/shadowsocks/userapiconfig.py #改成数据库对接
-	MU_SUFFIX=${MU_SUFFIX:-"marding"}
-	sed -i "s#MU_SUFFIX = 'marding'#MU_SUFFIX = '${MU_SUFFIX}'#" /root/shadowsocks/userapiconfig.py
+	MU_SUFFIX=${MU_SUFFIX:-"zhaoj.in"}
+	sed -i "s#MU_SUFFIX = 'zhaoj.in'#MU_SUFFIX = '${MU_SUFFIX}'#" /root/shadowsocks/userapiconfig.py
 	MYSQL_HOST=${MYSQL_HOST:-"http://127.0.0.1"}
 	sed -i "s#MYSQL_HOST = '127.0.0.1'#MYSQL_HOST = '${MYSQL_HOST}'#" /root/shadowsocks/userapiconfig.py
-	MYSQL_DB=${MYSQL_DB:-"ssdata"}
-	sed -i "s#MYSQL_DB = 'ssdata'#MYSQL_DB = '${MYSQL_DB}'#" /root/shadowsocks/userapiconfig.py
+	MYSQL_DB=${MYSQL_DB:-"root"}
+	sed -i "s#MYSQL_DB = 'shadowsocks'#MYSQL_DB = '${MYSQL_DB}'#" /root/shadowsocks/userapiconfig.py
 	MYSQL_USER=${MYSQL_USER:-"root"}
-	sed -i "s#MYSQL_USER = 'root'#MYSQL_USER = '${MYSQL_USER}'#" /root/shadowsocks/userapiconfig.py
-	MYSQL_PASS=${MYSQL_PASS:-"cPeZ3tM3GAdh9SHy"}
-	sed -i "s#MYSQL_PASS = 'cPeZ3tM3GAdh9SHy'#MYSQL_PASS = '${MYSQL_PASS}'#" /root/shadowsocks/userapiconfig.py
+	sed -i "s#MYSQL_USER = 'ss'#MYSQL_USER = '${MYSQL_USER}'#" /root/shadowsocks/userapiconfig.py
+	MYSQL_PASS=${MYSQL_PASS:-"root"}
+	sed -i "s#MYSQL_PASS = 'ss'#MYSQL_PASS = '${MYSQL_PASS}'#" /root/shadowsocks/userapiconfig.py
 	UserNODE_ID=${UserNODE_ID:-"3"}
 	sed -i '2d' /root/shadowsocks/userapiconfig.py
 	sed -i "2a\NODE_ID = ${UserNODE_ID}" /root/shadowsocks/userapiconfig.py
@@ -339,11 +339,8 @@ install_node_db(){
 	#iptables
 	iptables -F
 	iptables -X  
-	iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-	iptables -I INPUT -p tcp -m tcp --dport 888 -j ACCEPT
-	iptables -I INPUT -p tcp -m tcp --dport 8888 -j ACCEPT
-	#iptables -I INPUT -p tcp -m tcp --dport 22:65535 -j ACCEPT
-	#iptables -I INPUT -p udp -m udp --dport 22:65535 -j ACCEPT
+	iptables -I INPUT -p tcp -m tcp --dport 22:65535 -j ACCEPT
+	iptables -I INPUT -p udp -m udp --dport 22:65535 -j ACCEPT
 	iptables-save >/etc/sysconfig/iptables
 	iptables-save >/etc/sysconfig/iptables
 	echo 'iptables-restore /etc/sysconfig/iptables' >> /etc/rc.local
@@ -382,7 +379,7 @@ install_panel_and_node(){
 	echo "#############################################################"
 	echo "# 安装完成，登录http://${IPAddress}看看吧~                   #"
 	echo "# 用户名: 91vps 密码: 91vps                                  #"
-	echo "# phpmyadmin：http://${IPAddress}:888  用户名密码均为：^<>^  #"
+	echo "# phpmyadmin：http://${IPAddress}:888  用户名密码均为：root  #"
 	echo "# 安装完成，节点即将重启使配置生效                           #"
 	echo "# Github: https://github.com/mmmwhy/ss-panel-and-ss-py-mu    #"
 	echo "#############################################################"
