@@ -7,7 +7,7 @@ install_ss_panel_mod_v3(){
 	yum update -y nss curl libcurl 
 	num=$1
 	if [ "${num}" != "1" ]; then
-  	  wget -c --no-check-certificate https://raw.githubusercontent.com/puzzleindex/ss-panel-and-ss-py-mu/master/lnmp1.4.zip && unzip lnmp1.4.zip && rm -rf lnmp1.4.zip && cd lnmp1.4 && chmod +x install.sh && ./install.sh lnmp
+  	  wget -c --no-check-certificate https://raw.githubusercontent.com/thofd/ss-panel-and-ss-py-mu/master/lnmp1.4.zip && unzip lnmp1.4.zip && rm -rf lnmp1.4.zip && cd lnmp1.4 && chmod +x install.sh && ./install.sh lnmp
 	fi
 	cd /home/wwwroot/
 	cp -r default/phpmyadmin/ .
@@ -28,7 +28,6 @@ install_ss_panel_mod_v3(){
 	mysql -uroot -proot -e"create database sspanel;" 
 	mysql -uroot -proot -e"use sspanel;" 
 	mysql -uroot -proot sspanel < /home/wwwroot/default/sql/sspanel.sql
-	mysqladmin -u root -p root password cPeZ3tM3GAdh9SHy
 	cd /home/wwwroot/default
 	php -n xcat initdownload
 	php xcat initQQWry
